@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
 
   // ignore: non_constant_identifier_names
   getUserLoggedInStatus() async {
-    await HelperFunction.getUserLoggedInStatus().then((value) {
+    await HelperFunctions.getUserLoggedInStatus().then((value) {
       if (value != null) {
         _isSignedIn = value;
       }

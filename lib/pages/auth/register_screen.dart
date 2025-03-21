@@ -1,9 +1,11 @@
+import 'package:chatapp_flutter/helper/helper_function.dart';
 import 'package:chatapp_flutter/pages/auth/login_screen.dart';
+import 'package:chatapp_flutter/pages/home_screen.dart';
+import 'package:chatapp_flutter/service/auth_service.dart';
 import 'package:chatapp_flutter/widgets/widgets.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-// import 'package:chatapp_flutter/services/auth_service.dart';
-// import 'package:chatapp_flutter/services/database_service.dart';
+
 // import 'package:chatapp_flutter/utils/utilities.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -19,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String email = "";
   String password = "";
   String fullName = "";
-  // AuthService authService = AuthService();
+  AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             onPressed: () {
-                              // register();
+                              register();
                             },
                           ),
                         ),
@@ -181,27 +183,29 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  // register() async {
-  //   if (formKey.currentState!.validate()) {
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-  //     await authService
-  //         .registerUserWithEmailandPassword(fullName, email, password)
-  //         .then((value) async {
-  //       if (value == true) {
-  //         // saving the shared preference state
-  //         await HelperFunctions.saveUserLoggedInStatus(true);
-  //         await HelperFunctions.saveUserEmailSF(email);
-  //         await HelperFunctions.saveUserNameSF(fullName);
-  //         nextScreenReplace(context, const HomePage());
-  //       } else {
-  //         showSnackbar(context, Colors.red, value);
-  //         setState(() {
-  //           _isLoading = false;
-  //         });
-  //       }
-  //     });
-  //   }
-  // }
+  register() async {
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      await authService
+          .registerUserWithEmailandPassword(fullName, email, password)
+          .then((value) async {
+            if (value == true) {
+              // saving the shared preference state
+              await HelperFunctions.saveUserLoggedInStatus(true);
+              await HelperFunctions.saveUserEmailSF(email);
+              await HelperFunctions.saveUserNameSF(fullName);
+              // ignore: use_build_context_synchronously
+              nextScreenReplace(context, const HomePage());
+            } else {
+              // ignore: use_build_context_synchronously
+              showSnackbar(context, Colors.red, value);
+              setState(() {
+                _isLoading = false;
+              });
+            }
+          });
+    }
+  }
 }
